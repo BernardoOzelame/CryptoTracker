@@ -1,14 +1,15 @@
 <template>
     <div id="app">
-        <h1>Crypto Tracker</h1>
+        <headerComponent />
         <crypto-tracker />
     </div>
 </template>
 
 <script>
 import CryptoTracker from '../../Components/CryptoTracker.vue';
+import headerComponent from '../../Components/Header.vue';
 
 export default {
-    components: { CryptoTracker },
+    components: { CryptoTracker, headerComponent },
 };
 </script>

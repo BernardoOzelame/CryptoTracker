@@ -27,5 +27,5 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::get('/a', function () {
-    return view('app');
+    return Inertia::render('Crypto/Index');
 });
