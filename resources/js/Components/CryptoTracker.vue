@@ -142,6 +142,14 @@
             };
 
         },
+        watch: { // Observa mudanças nos dados
+            selectedCoins: {
+                deep: true, 
+                handler() {
+                    this.saveToLocalStorage(); 
+                },
+            },
+        },
         methods: {
 
             toggleSelectVisibility() {
@@ -218,30 +226,42 @@
                     });
                 });
 
-                // Unifica todas as promessas da requisição
+                // Processar as requisições
                 Promise.all(fetchPromises)
                     .then(responses => {
                         responses.forEach((response, index) => {
                             const coin = selectedCoins[index];
                             const color = this.getRandomColor();
 
-                            const data = response.data.prices.map(price => ({
-                                x: price[0],
-                                y: price[1],
-                            }));
+                            // Verifica se os dados existem antes de mapear
+                            if (response.data && response.data.prices) {
+                                const data = response.data.prices.map(price => ({
+                                    x: price[0],
+                                    y: price[1],
+                                }));
 
-                            datasets.push({
-                                label: `${coin.name}`,
-                                data,
-                                borderColor: color,
-                                backgroundColor: color + "80",
-                            });
+                                datasets.push({
+                                    label: `${coin.name}`,
+                                    data,
+                                    borderColor: color,
+                                    backgroundColor: color + "80",
+                                });
+                            } else {
+                                console.warn(`Dados ausentes para a moeda: ${coin.name}`);
+                            }
                         });
 
-                        this.chartData = datasets;
-                        this.renderChart();
+                        if (datasets.length > 0) {
+                            this.chartData = datasets;
+                            this.renderChart();
+                        } else {
+                            console.warn("Nenhum dado foi carregado para exibir no gráfico.");
+                        }
                     })
-                    .catch(error => console.error("Erro ao buscar os dados para o gráfico:", error), this.showError = true);
+                    .catch(error => {
+                        console.error("Erro ao buscar os dados para o gráfico:", error);
+                        this.showError = true;
+                    });
             },
 
             renderChart() {
