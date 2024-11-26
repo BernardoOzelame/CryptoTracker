@@ -1,43 +1,49 @@
 <template>
 
-    <div style="margin-left: 30px;">
-
-        <h1>Crypto Tracker</h1>
+    <div>
 
         <div v-if="showError" style="padding: 20px; font-size: 25px;">Deu merda na API</div>
 
         <div>
             <label>Data inicial:</label>
-            <input type="date" v-model="startDate" @change="saveToLocalStorage" style="color: black;" />
+            <VueDatePicker v-model="startDate" @change="saveToLocalStorage"></VueDatePicker>
             <br>
             <label>Data final:</label>
-            <input type="date" v-model="endDate" @change="saveToLocalStorage" style="color: black;" />
+            <VueDatePicker v-model="endDate" @change="saveToLocalStorage"></VueDatePicker>
         </div>
+        
+        <div>
+            <div>
+                <div class="containerListagemMoedasEscolhidas" style="max-width: 19%;">
 
-        <div class="containerListagemMoedasEscolhidas">
+                    <div class="listagemMoedasEscolhidas">
+                        <span class="moedaEscolhida" v-for="coin in selectedCoins" :key="coin.id">
+                            <Checkbox v-model:checked="coin.selected" />
+                            <span class="nomeMoedaEscolhida text-gray-900">{{ coin.name }}</span>
+                            <span title="Remover Criptomoeda" @click="removeCoin(coin.id)" class="removerMoedaEscolhida">
+                            <i class="fa fa-times"></i></span>
+                        </span>
+                    </div>
 
-            <div class="listagemMoedasEscolhidas">
-                <span class="moedaEscolhida" v-for="coin in selectedCoins" :key="coin.id">
-                    <Checkbox v-model:checked="coin.selected" />
-                    <span class="nomeMoedaEscolhida text-gray-900">{{ coin.name }}</span>
-                    <span title="Remover Criptomoeda" @click="removeCoin(coin.id)" class="removerMoedaEscolhida">
-                    <i class="fa fa-times"></i></span>
-                </span>
+                    <select v-if="showSelect" v-model="selectedCoin" @change="addCryptoToList" style="color: black;">
+                        <option v-for="coin in coins" :key="coin.id" :value="coin.id">
+                            {{ coin.name }}
+                        </option>
+                    </select>
+
+                </div>
+
+                <div>
+                    <button class="btnAddCrypto" type="button" v-on:click="toggleSelectVisibility">Adicionar Crypto</button>
+                    <br>
+                    <button class="btnGerarGrafico" type="button" @click="generateChart">Gerar gráfico</button>
+                </div>
             </div>
 
-            <select v-if="showSelect" v-model="selectedCoin" @change="addCryptoToList" style="color: black;">
-                <option v-for="coin in coins" :key="coin.id" :value="coin.id">
-                    {{ coin.name }}
-                </option>
-            </select>
-
-        </div>
-        <button class="btnAddCrypto" type="button" v-on:click="toggleSelectVisibility">Adicionar Criptomoeda</button>
-        <button class="btnGerarGrafico" type="button" @click="generateChart">Gerar gráfico</button>
-
-        <!-- GRAFICO -->
-        <div v-if="chartData" style="margin-top: 100px;">
-            <canvas style="max-width: 90%; max-height: 500px;" id="crypto-chart" ref="chartCanvas"></canvas>
+            <!-- GRAFICO -->
+            <div v-if="chartData" style="max-width: 70%;">
+                <canvas id="crypto-chart" ref="chartCanvas"></canvas>
+            </div>
         </div>
 
     </div>
@@ -47,7 +53,6 @@
 <style>
     .btnAddCrypto {
         background-color: #4CAF50;
-        /* Green */
         border: none;
         color: white;
         padding: 10px 32px;
@@ -124,6 +129,8 @@
     import "chartjs-adapter-date-fns";
     import 'font-awesome/css/font-awesome.css';
     import Checkbox from './Checkbox.vue';
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css'
 
     Chart.register(...registerables);
 
@@ -131,6 +138,7 @@
 
         components: {
             Checkbox,
+            VueDatePicker
         },
 
         data() {
@@ -148,6 +156,7 @@
             };
 
         },
+
         watch: { // Observa mudanças nos dados
             selectedCoins: {
                 deep: true, 
@@ -156,6 +165,7 @@
                 },
             },
         },
+
         methods: {
 
             toggleSelectVisibility() {
@@ -165,7 +175,10 @@
             addCryptoToList() {
                 const coin = this.coins.find(c => c.id === this.selectedCoin);
                 if (coin && !this.selectedCoins.some(c => c.id === coin.id)) {
-                    this.selectedCoins.push({ ...coin, selected: true });
+                    this.selectedCoins.push({ 
+                        ...coin, 
+                        selected: true
+                    });
                     this.saveToLocalStorage();
                 }
                 this.showSelect = false;
@@ -197,7 +210,7 @@
                     const response = await axios.get("https://api.coingecko.com/api/v3/coins/list");
                     this.coins = response.data;
                 } catch (error) {
-                    console.error("Erro ao buscar moedas:", error);
+                    console.error("Erro ao buscar moedas: ", error);
                 }
             },
 
@@ -217,8 +230,8 @@
                     return;
                 }
 
-                const start = new Date(this.startDate).getTime() / 1000; // Timestamps em segundos
-                const end = new Date(this.endDate).getTime() / 1000; // Timestamps em segundos
+                const start = new Date(this.startDate).getTime() / 1000;
+                const end = new Date(this.endDate).getTime() / 1000;
 
                 const datasets = [];
 
