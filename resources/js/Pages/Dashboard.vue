@@ -25,6 +25,15 @@ import { Head } from '@inertiajs/vue3';
                     </div>
                 </div>
             </div>
+        <CryptoTracker />
         </div>
     </AuthenticatedLayout>
 </template>
+
+<script>
+import CryptoTracker from '../Components/CryptoTracker.vue';
+
+export default {
+    components: { CryptoTracker },
+};
+</script>

@@ -18,10 +18,10 @@
 
             <div class="listagemMoedasEscolhidas">
                 <span class="moedaEscolhida" v-for="coin in selectedCoins" :key="coin.id">
-                    <input type="checkbox" v-model="coin.selected" />
-                    <span class="nomeMoedaEscolhida">{{ coin.name }}</span>
-                    <span title="Remover Criptomoeda" @click="removeCoin(coin.id)" class="removerMoedaEscolhida"><i
-                            class="fa fa-times"></i></span>
+                    <Checkbox v-model:checked="coin.selected" />
+                    <span class="nomeMoedaEscolhida text-gray-900">{{ coin.name }}</span>
+                    <span title="Remover Criptomoeda" @click="removeCoin(coin.id)" class="removerMoedaEscolhida">
+                    <i class="fa fa-times"></i></span>
                 </span>
             </div>
 
@@ -35,6 +35,7 @@
         <button class="btnAddCrypto" type="button" v-on:click="toggleSelectVisibility">Adicionar Criptomoeda</button>
         <button class="btnGerarGrafico" type="button" @click="generateChart">Gerar gráfico</button>
 
+        <!-- GRAFICO -->
         <div v-if="chartData" style="margin-top: 100px;">
             <canvas style="max-width: 90%; max-height: 500px;" id="crypto-chart" ref="chartCanvas"></canvas>
         </div>
@@ -122,10 +123,15 @@
     import { Chart, registerables } from "chart.js";
     import "chartjs-adapter-date-fns";
     import 'font-awesome/css/font-awesome.css';
+    import Checkbox from './Checkbox.vue';
 
     Chart.register(...registerables);
 
     export default {
+
+        components: {
+            Checkbox,
+        },
 
         data() {
 
@@ -303,6 +309,11 @@
                                 },
                                 y: {
                                     beginAtZero: false,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return `R$ ${value.toLocaleString('pt-BR')}`;
+                                        },
+                                    },
                                 },
                             },
                         },
