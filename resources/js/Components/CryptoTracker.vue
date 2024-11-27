@@ -12,9 +12,9 @@
             <VueDatePicker v-model="endDate" @change="saveToLocalStorage"></VueDatePicker>
         </div>
         
-        <div>
+        <div style="display: flex; margin-top: 50px;">
             <div>
-                <div class="containerListagemMoedasEscolhidas" style="max-width: 19%;">
+                <div class="containerListagemMoedasEscolhidas" style="width: 330px; max-width: 330px; min-width: 330px;">
 
                     <div class="listagemMoedasEscolhidas">
                         <span class="moedaEscolhida" v-for="coin in selectedCoins" :key="coin.id">
@@ -41,7 +41,7 @@
             </div>
 
             <!-- GRAFICO -->
-            <div v-if="chartData" style="max-width: 70%;">
+            <div v-if="chartData" style="width: 70%; max-width: 70%; margin-left: 100px;">
                 <canvas id="crypto-chart" ref="chartCanvas"></canvas>
             </div>
         </div>

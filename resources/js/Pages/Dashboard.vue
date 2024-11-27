@@ -15,7 +15,7 @@ import { Head } from '@inertiajs/vue3';
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-2">
             <div class="m-5">
                 <div
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
