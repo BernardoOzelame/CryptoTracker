@@ -1,8 +1,7 @@
 <template>
 
     <div>
-
-        <div v-if="showError" style="padding: 20px; font-size: 25px;">Deu merda na API</div>
+        <Toast />
 
         <div>
             <label>Data inicial:</label>
@@ -129,16 +128,20 @@
     import "chartjs-adapter-date-fns";
     import 'font-awesome/css/font-awesome.css';
     import Checkbox from './Checkbox.vue';
+    import Modal from './Modal.vue';
     import VueDatePicker from '@vuepic/vue-datepicker';
-    import '@vuepic/vue-datepicker/dist/main.css'
+    import '@vuepic/vue-datepicker/dist/main.css';
+    import Toast from 'primevue/toast';
 
-    Chart.register(...registerables);
-
+    Chart.register(...registerables); 
+    
     export default {
 
         components: {
             Checkbox,
-            VueDatePicker
+            VueDatePicker,
+            Modal, 
+            Toast
         },
 
         data() {
@@ -151,7 +154,6 @@
                 chartData: null, 
                 chart: null, 
                 showSelect: false,
-                showError: false,
                 selectedCoins: [], // crypto selecionadas no checkbox
             };
 
@@ -224,9 +226,20 @@
             },
 
             generateChart() {
+                this.$toast.add({
+                    severity: 'success',
+                    summary: 'Gerando...',
+                    life: 2000,
+                });
                 const selectedCoins = this.selectedCoins.filter(coin => coin.selected);
+
                 if (selectedCoins.length === 0 || !this.startDate || !this.endDate) {
-                    console.warn("Preencha todas as opções antes de gerar o gráfico.");
+                    this.$toast.add({
+                        severity: 'warn',
+                        summary: 'Atenção',
+                        detail: 'Preencha todas as opções antes de gerar o gráfico.',
+                        life: 3000,
+                    });
                     return;
                 }
 
@@ -278,8 +291,12 @@
                         }
                     })
                     .catch(error => {
-                        console.error("Erro ao buscar os dados para o gráfico:", error);
-                        this.showError = true;
+                        this.$toast.add({
+                            severity: 'error',
+                            summary: 'Erro',
+                            detail: 'Ocorreu um erro ao gerar o gráfico. Tente novamente mais tarde.',
+                            life: 3000,
+                        });
                     });
             },
 
