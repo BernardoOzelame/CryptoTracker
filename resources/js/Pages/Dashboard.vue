@@ -9,7 +9,7 @@ import { Head } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <template #header>
             <h2
-                class="font-semibold leading-tight text-gray-800 dark:text-gray-200" style="font-size: xx-large; "
+                class="font-semibold leading-tight text-gray-800 dark:text-gray-200" style="font-size: xx-large;"
             >
                 Crypto Tracker
             </h2>
@@ -20,7 +20,7 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
                 >
-                    <div class="p-6 text-gray-900 dark:text-gray-100" style="width: 2000px; max-width: 100%; !important">    
+                    <div class="p-6 text-gray-900 dark:text-gray-100" style="width: 2000px; max-width: 100%;">    
                         <CryptoTracker />
                     </div>
                 </div>

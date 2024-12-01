@@ -40,7 +40,7 @@
             </div>
 
             <!-- GRAFICO -->
-            <div v-if="chartData" style="width: 70%; max-width: 70%; margin-left: 100px;">
+            <div v-if="chartData" style="width: 70%; margin-left: 100px; max-height: 600px;">
                 <canvas id="crypto-chart" ref="chartCanvas"></canvas>
             </div>
         </div>
@@ -140,8 +140,7 @@
         components: {
             Checkbox,
             VueDatePicker,
-            Modal, 
-            Toast
+            Modal,
         },
 
         data() {
@@ -229,7 +228,7 @@
                 this.$toast.add({
                     severity: 'success',
                     summary: 'Gerando...',
-                    life: 2000,
+                    life: 2500,
                 });
                 const selectedCoins = this.selectedCoins.filter(coin => coin.selected);
 
@@ -238,7 +237,7 @@
                         severity: 'warn',
                         summary: 'Atenção',
                         detail: 'Preencha todas as opções antes de gerar o gráfico.',
-                        life: 3000,
+                        life: 5000,
                     });
                     return;
                 }
@@ -295,7 +294,7 @@
                             severity: 'error',
                             summary: 'Erro',
                             detail: 'Ocorreu um erro ao gerar o gráfico. Tente novamente mais tarde.',
-                            life: 3000,
+                            life: 5000,
                         });
                     });
             },
