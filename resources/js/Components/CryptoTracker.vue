@@ -83,7 +83,6 @@
         width: 350px;
         max-height: 70vh;
         overflow-y: auto;
-        margin-top: 30px;
     }
 
     .listagemMoedasEscolhidas {
@@ -170,6 +169,16 @@
         methods: {
 
             toggleSelectVisibility() {
+                if (this.selectedCoins.length >= 5) {
+                    this.$toast.add({
+                        severity: 'error', 
+                        summary: 'Erro', 
+                        detail: 'Você só pode adicionar 5 moedas na lista.', 
+                        life: 5000,
+                    });
+                    return;
+                }
+
                 this.showSelect = !this.showSelect;
             },
 
