@@ -235,7 +235,7 @@
 
             generateChart() {
                 this.$toast.add({
-                    severity: 'success',
+                    severity: 'warn',
                     summary: 'Gerando...',
                     life: 2500,
                 });
