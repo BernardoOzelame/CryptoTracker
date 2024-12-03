@@ -3,12 +3,12 @@
     <div>
         <Toast />
 
-        <div>
+        <div class="datas">
             <label>Data inicial:</label>
-            <VueDatePicker v-model="startDate" @change="saveToLocalStorage"></VueDatePicker>
+            <VueDatePicker v-model="startDate" @change="saveToLocalStorage" :enable-time-picker="false" :dark="isDarkMode"></VueDatePicker>
             <br>
             <label>Data final:</label>
-            <VueDatePicker v-model="endDate" @change="saveToLocalStorage"></VueDatePicker>
+            <VueDatePicker v-model="endDate" @change="saveToLocalStorage" :enable-time-picker="false" :dark="isDarkMode"></VueDatePicker>
         </div>
         
         <div style="display: flex; margin-top: 50px;">
@@ -18,7 +18,7 @@
                     <div class="listagemMoedasEscolhidas">
                         <span class="moedaEscolhida" v-for="coin in selectedCoins" :key="coin.id">
                             <Checkbox v-model:checked="coin.selected" />
-                            <span class="nomeMoedaEscolhida text-gray-900">{{ coin.name }}</span>
+                            <span class="nomeMoedaEscolhida text-gray-900 dark:text-gray-200">{{ coin.name }}</span>
                             <span title="Remover Criptomoeda" @click="removeCoin(coin.id)" class="removerMoedaEscolhida">
                             <i class="fa fa-times"></i></span>
                         </span>
@@ -39,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- GRAFICO -->
             <div v-if="chartData" style="width: 70%; margin-left: 100px; max-height: 600px;">
                 <canvas id="crypto-chart" ref="chartCanvas"></canvas>
             </div>
@@ -50,6 +49,16 @@
 </template>
 
 <style>
+    .dp__theme_dark {
+        --dp-background-color: #1F2937;
+        --dp-border-color: #ccc;
+        --dp-menu-border-color: #ccc;
+    }
+
+    .datas {
+        width: 350px;
+    }
+    
     .btnAddCrypto {
         background-color: #4CAF50;
         border: none;
@@ -61,6 +70,7 @@
         font-size: 16px;
         margin: 4px 2px;
         cursor: pointer;
+        border-radius: 7px;
     }
 
     .btnGerarGrafico {
@@ -74,6 +84,7 @@
         font-size: 16px;
         margin: 4px 2px;
         cursor: pointer;
+        border-radius: 7px;
     }
 
     .containerListagemMoedasEscolhidas {
@@ -152,6 +163,11 @@
                 localStorage.removeItem('fezLogin');
             }
 
+            this.isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                this.isDarkMode = e.matches;
+            });
+
         },
 
         data() {
@@ -165,6 +181,7 @@
                 chart: null, 
                 showSelect: false,
                 selectedCoins: [], // crypto selecionadas no checkbox
+                isDarkMode: false,
             };
 
         },
