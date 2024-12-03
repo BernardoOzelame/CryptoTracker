@@ -19,11 +19,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
-        Log::info('Dados da sessão:', ['status' => session('status')]);
-        // Log::info('Rotas disponíveis:', ['password_request' => Route::has('password.request')]);
-
         return Inertia::render('Auth/Login', [
-            // 'canResetPassword' => Route::has('password.request'),
+            'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
         ]);
     }

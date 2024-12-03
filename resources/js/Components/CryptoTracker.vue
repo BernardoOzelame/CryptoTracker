@@ -122,6 +122,7 @@
 </style>
 
 <script>
+
     import axios from "axios";
     import { Chart, registerables } from "chart.js";
     import "chartjs-adapter-date-fns";
@@ -142,6 +143,17 @@
             Modal,
         },
 
+        async mounted() {
+
+            await this.fetchCoins();
+            this.loadFromLocalStorage();
+            if (localStorage.getItem('fezLogin')) {
+                window.location.reload();
+                localStorage.removeItem('fezLogin');
+            }
+
+        },
+
         data() {
 
             return {
@@ -157,14 +169,15 @@
 
         },
 
-        watch: { // Observa mudanças nos dados
-            selectedCoins: {
-                deep: true, 
-                handler() {
-                    this.saveToLocalStorage(); 
-                },
+        watch: {
+            startDate() {
+                this.saveToLocalStorage();
             },
+            endDate() {
+                this.saveToLocalStorage();
+            }
         },
+
 
         methods: {
 
@@ -178,7 +191,8 @@
                     });
                     return;
                 }
-
+                
+                this.selectedCoin = "";
                 this.showSelect = !this.showSelect;
             },
 
@@ -200,19 +214,42 @@
             },
 
             saveToLocalStorage() {
-                localStorage.setItem('selectedCoins', JSON.stringify(this.selectedCoins));
-                localStorage.setItem('startDate', this.startDate);
-                localStorage.setItem('endDate', this.endDate);
+                const userId = window.userId;
+                const coinsKey = `selectedCoins_${userId}`;
+                const datesKey = `selectedDates_${userId}`;
+
+                const coins = this.selectedCoins.map(coin => ({
+                    id: coin.id,
+                    name: coin.name,
+                    selected: coin.selected,
+                }));
+
+                const dates = {
+                    startDate: this.startDate,
+                    endDate: this.endDate,
+                };
+
+                localStorage.setItem(coinsKey, JSON.stringify(coins));
+                localStorage.setItem(datesKey, JSON.stringify(dates));
             },
 
             loadFromLocalStorage() {
-                const savedCoins = localStorage.getItem('selectedCoins');
-                const savedStartDate = localStorage.getItem('startDate');
-                const savedEndDate = localStorage.getItem('endDate');
+                const userId = window.userId;
+                const coinsKey = `selectedCoins_${userId}`;
+                const datesKey = `selectedDates_${userId}`;
 
-                if (savedCoins) this.selectedCoins = JSON.parse(savedCoins);
-                if (savedStartDate) this.startDate = savedStartDate;
-                if (savedEndDate) this.endDate = savedEndDate;
+                const savedCoins = localStorage.getItem(coinsKey);
+                const savedDates = localStorage.getItem(datesKey);
+
+                if (savedCoins) {
+                    this.selectedCoins = JSON.parse(savedCoins);
+                }
+
+                if (savedDates) {
+                    const { startDate, endDate} = JSON.parse(savedDates);
+                    this.startDate = startDate;
+                    this.endDate = endDate;
+                }
             },
 
             async fetchCoins() {
@@ -234,11 +271,6 @@
             },
 
             generateChart() {
-                this.$toast.add({
-                    severity: 'warn',
-                    summary: 'Gerando...',
-                    life: 2500,
-                });
                 const selectedCoins = this.selectedCoins.filter(coin => coin.selected);
 
                 if (selectedCoins.length === 0 || !this.startDate || !this.endDate) {
@@ -358,13 +390,6 @@
                     });
                 });
             }
-
-        },
-
-        async mounted() {
-
-            await this.fetchCoins();
-            this.loadFromLocalStorage();
 
         },
 

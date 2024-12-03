@@ -12,3 +12,7 @@
     @inertia
 </body>
 </html>
+
+<script>
+    window.userId = @json(auth()->check() ? auth()->id() : null);
+</script>

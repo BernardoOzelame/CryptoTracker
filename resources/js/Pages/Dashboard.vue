@@ -20,7 +20,7 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
                 >
-                    <div class="p-6 text-gray-900 dark:text-gray-100" style="width: 2000px; max-width: 100%;">    
+                    <div class="p-6 text-gray-900 dark:text-gray-100" style="width: 2000px; max-width: 100%; min-height: 600px">    
                         <CryptoTracker />
                     </div>
                 </div>

@@ -27,6 +27,10 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const handleLoginClick = () => {
+    localStorage.setItem('fezLogin', true);
+};
 </script>
 
 <template>
@@ -91,6 +95,7 @@ const submit = () => {
                     class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
+                    @click="handleLoginClick"
                 >
                     Log in
                 </PrimaryButton>
