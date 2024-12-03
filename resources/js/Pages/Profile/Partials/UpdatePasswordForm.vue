@@ -82,7 +82,7 @@ const updatePassword = () => {
             <div>
                 <InputLabel
                     for="password_confirmation"
-                    value="Confirme Sua Nova Senha"
+                    value="Confirme sua nova senha"
                 />
 
                 <TextInput

@@ -22,6 +22,10 @@
                             <span title="Remover Criptomoeda" @click="removeCoin(coin.id)" class="removerMoedaEscolhida">
                             <i class="fa fa-times"></i></span>
                         </span>
+
+                        <span class="text-gray-900 dark:text-gray-200" v-if="selectedCoins.length == 0">
+                            Nenhuma moeda selecionada.
+                        </span>
                     </div>
 
                     <select v-if="showSelect" v-model="selectedCoin" @change="addCryptoToList" style="color: black;">
@@ -56,7 +60,7 @@
     }
 
     .datas {
-        width: 350px;
+        width: 330px;
     }
     
     .btnAddCrypto {
@@ -208,7 +212,6 @@
                     });
                     return;
                 }
-                
                 this.selectedCoin = "";
                 this.showSelect = !this.showSelect;
             },

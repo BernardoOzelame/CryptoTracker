@@ -2,7 +2,7 @@
     <section class="space-y-6">
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Configurar Alertas de Valor de Criptomoeda
+                Configurar Alertas
             </h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -12,7 +12,10 @@
 
         <div class="listagemMoedasSelecionadas">
             <span class="moedas" v-for="coin in selectedCoins" :key="coin.id" @click="openModal(coin)">
-                <span class="nomeMoedas text-gray-900">{{ coin.name }}</span>
+                <span class="nomeMoedas text-gray-900 dark:text-gray-200">- {{ coin.name }}</span>
+            </span>
+            <span class="text-gray-900 dark:text-gray-200" v-if="selectedCoins.length == 0">
+                Nenhuma moeda selecionada.
             </span>
         </div>
 
@@ -90,12 +93,26 @@ export default {
         },
 
         saveAlert() {
-            // lógica para salvar o alerta com base no que o usuário preencheu no input
-        },
+            const alertValue = document.getElementById('alertValue').value;
+
+            axios.post('/alerts', {
+                coin_name: this.selectedCoinName,
+                alert_value: alertValue,
+            }).then(response => {
+                alert('Alerta configurado com sucesso!');
+                this.closeModal();
+            }).catch(error => {
+                console.error(error);
+                alert('Erro ao salvar alerta.');
+            });
+        }
+
     },
 
     mounted() {
-        const savedCoins = localStorage.getItem('selectedCoins');
+        const userId = window.userId;
+        const coinsKey = `selectedCoins_${userId}`;
+        const savedCoins = localStorage.getItem(coinsKey);
         if (savedCoins) {
             this.selectedCoins = JSON.parse(savedCoins);
         }
