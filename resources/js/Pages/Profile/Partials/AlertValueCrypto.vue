@@ -67,6 +67,7 @@
 import Modal from '@/Components/Modal.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import Toast from 'primevue/toast';
 
 export default {
     components: {
@@ -94,6 +95,10 @@ export default {
 
         saveAlert() {
             const alertValue = document.getElementById('alertValue').value;
+            console.log('Enviando dados para o servidor:', {
+                coin_name: this.selectedCoinName,
+                alert_value: alertValue,
+            });
 
             axios.post('/alerts', {
                 coin_name: this.selectedCoinName,
@@ -102,7 +107,16 @@ export default {
                 alert('Alerta configurado com sucesso!');
                 this.closeModal();
             }).catch(error => {
-                console.error(error);
+                console.error('Erro completo:', error);
+                if (error.response) {
+                    console.error('Erro da API:', error.response.data);
+                    console.error('Status HTTP:', error.response.status);
+                    console.error('Headers:', error.response.headers);
+                } else if (error.request) {
+                    console.error('Nenhuma resposta recebida:', error.request);
+                } else {
+                    console.error('Erro ao configurar requisição:', error.message);
+                }
                 alert('Erro ao salvar alerta.');
             });
         }

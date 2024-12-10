@@ -13,8 +13,8 @@ class  Kernel  extends  ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $userAlerts = \App\Models\Alert::with('user')->get();
-            \App\Services\CryptoPriceChecker::checkPrices($userAlerts);
+            $userAlerts = \App\Models\Alert::with('user_id')->get();
+            \App\Services\CryptoPriceChecker::checkPrices($userAlerts->toArray());
         })->everyFiveMinutes(); // Ajuste o tempo conforme necessário
     }
 
@@ -26,6 +26,6 @@ class  Kernel  extends  ConsoleKernel
      { 
         $this -> load ( __DIR__ . '/Commands' ); 
 
-        require  base_path ( 'routes/console.php' ); 
+        require  base_path ( 'routes/web.php' ); 
     } 
 }
